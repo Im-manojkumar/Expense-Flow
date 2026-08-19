@@ -21,100 +21,25 @@ export default function Dashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const [accountsRes, expensesRes, incomesRes] = await Promise.all([
-        api.get('/accounts/'),
-        api.get('/expenses/'),
-        api.get('/incomes/')
-      ]);
-
-      const accounts = accountsRes.data.results || accountsRes.data;
-      const expenses = expensesRes.data.results || expensesRes.data;
-      const incomes = incomesRes.data.results || incomesRes.data;
-
-      const totalBalance = accounts.reduce((sum, acc) => sum + parseFloat(acc.balance), 0);
+      const response = await api.get('/dashboard/');
+      const apiData = response.data;
       
-      const currentMonth = new Date().getMonth();
-      const currentYear = new Date().getFullYear();
-
-      const monthlyExpenses = expenses
-        .filter(e => {
-          const d = new Date(e.date);
-          return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-        })
-        .reduce((sum, e) => sum + parseFloat(e.amount), 0);
-
-      const monthlyIncome = incomes
-        .filter(i => {
-          const d = new Date(i.date);
-          return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-        })
-        .reduce((sum, i) => sum + parseFloat(i.amount), 0);
-
-      const mappedExpenses = expenses.map(e => ({
-        id: `exp_${e.id}`,
-        title: e.category,
-        subtitle: e.payment_method,
-        amount: -parseFloat(e.amount),
-        date: new Date(e.date),
-        type: 'expense'
-      }));
-
-      const mappedIncomes = incomes.map(i => ({
-        id: `inc_${i.id}`,
-        title: i.source,
-        subtitle: "Income",
-        amount: parseFloat(i.amount),
-        date: new Date(i.date),
-        type: 'income'
-      }));
-
-      const merged = [...mappedExpenses, ...mappedIncomes].sort((a, b) => b.date - a.date).slice(0, 5);
-
-      // Compute category data
-      const categoryMap = {};
-      expenses.filter(e => {
-        const d = new Date(e.date);
-        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-      }).forEach(e => {
-        if (!categoryMap[e.category]) categoryMap[e.category] = 0;
-        categoryMap[e.category] += parseFloat(e.amount);
-      });
-      const categoryData = Object.entries(categoryMap).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
-
-      // Compute trend data (last 5 months)
-      const trendMap = {};
-      for (let i = 4; i >= 0; i--) {
-        const d = new Date();
-        d.setMonth(d.getMonth() - i);
-        const monthKey = d.toLocaleDateString('en-US', { month: 'short' });
-        trendMap[monthKey] = { name: monthKey, Income: 0, Expense: 0 };
-      }
-
-      incomes.forEach(i => {
-        const d = new Date(i.date);
-        const monthKey = d.toLocaleDateString('en-US', { month: 'short' });
-        if (trendMap[monthKey]) {
-          trendMap[monthKey].Income += parseFloat(i.amount);
-        }
-      });
-
-      expenses.forEach(e => {
-        const d = new Date(e.date);
-        const monthKey = d.toLocaleDateString('en-US', { month: 'short' });
-        if (trendMap[monthKey]) {
-          trendMap[monthKey].Expense += parseFloat(e.amount);
-        }
-      });
+      // The backend returns:
+      // totalBalance, monthlyIncome, monthlyExpenses, categoryData, recentTransactions, trendData
       
-      const trendData = Object.values(trendMap);
+      // Parse dates for recent transactions
+      const parsedTransactions = (apiData.recentTransactions || []).map(tx => ({
+        ...tx,
+        date: new Date(tx.date)
+      }));
 
       setData({
-        totalBalance,
-        monthlyIncome,
-        monthlyExpenses,
-        recentTransactions: merged,
-        categoryData,
-        trendData
+        totalBalance: apiData.totalBalance || 0,
+        monthlyIncome: apiData.monthlyIncome || 0,
+        monthlyExpenses: apiData.monthlyExpenses || 0,
+        recentTransactions: parsedTransactions,
+        categoryData: apiData.categoryData || [],
+        trendData: apiData.trendData || []
       });
     } catch (error) {
       console.error("Failed to fetch dashboard data:", error);

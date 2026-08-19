@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'apps.incomes',
     'apps.budgets',
     'apps.categories',
+    'apps.dashboard',
     'apps.accounts',
 ]
 
