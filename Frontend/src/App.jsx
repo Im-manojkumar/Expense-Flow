@@ -2,7 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext.jsx'
 import Layout from './components/Layout.jsx'
 import Dashboard from './pages/Dashboard.jsx'
-import Transactions from './pages/Transactions.jsx'
+import Expenses from './pages/Expenses.jsx'
+import Incomes from './pages/Incomes.jsx'
 import Budgets from './pages/Budgets.jsx'
 import Accounts from './pages/Accounts.jsx'
 import Reports from './pages/Reports.jsx'
@@ -12,7 +13,8 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 
 function ProtectedRoute({ children }) {
-  const { token } = useAuth();
+  const { token, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
   if (!token) {
     return <Navigate to="/login" />;
   }
@@ -27,7 +29,8 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/expenses" element={<Expenses />} />
+          <Route path="/incomes" element={<Incomes />} />
           <Route path="/budgets" element={<Budgets />} />
           <Route path="/accounts" element={<Accounts />} />
           <Route path="/reports" element={<Reports />} />

@@ -2,9 +2,9 @@ import { NavLink } from 'react-router-dom'
 
 const MOBILE_ITEMS = [
   { to: '/', label: 'Dashboard', icon: 'dashboard', end: true },
-  { to: '/transactions', label: 'Spend', icon: 'payments' },
+  { to: '/incomes', label: 'Incomes', icon: 'arrow_downward' },
+  { to: '/expenses', label: 'Expenses', icon: 'arrow_upward' },
   { to: '/budgets', label: 'Budget', icon: 'savings' },
-  { to: '/accounts', label: 'Accounts', icon: 'account_balance' },
   { to: '/reports', label: 'More', icon: 'more_horiz' },
 ]
 

@@ -161,7 +161,7 @@ export default function Dashboard() {
         <div className="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.04)] p-lg">
           <div className="flex justify-between items-center mb-lg">
             <h3 className="font-headline-md text-headline-md-mobile md:text-headline-md text-on-surface">Recent Transactions</h3>
-            <Link to="/transactions" className="font-label-md text-label-md text-primary hover:text-primary-container transition-colors">View All</Link>
+            <Link to="/expenses" className="font-label-md text-label-md text-primary hover:text-primary-container transition-colors">View All</Link>
           </div>
           <div className="flex flex-col">
             {loading ? (

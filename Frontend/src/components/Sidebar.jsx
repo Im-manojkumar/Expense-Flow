@@ -2,10 +2,11 @@ import { NavLink } from 'react-router-dom'
 
 const NAV_ITEMS = [
   { to: '/', label: 'Dashboard', icon: 'dashboard', end: true },
-  { to: '/transactions', label: 'Transactions', icon: 'receipt_long' },
-  { to: '/budgets', label: 'Budgets', icon: 'account_balance_wallet' },
-  { to: '/accounts', label: 'Accounts', icon: 'account_balance' },
-  { to: '/reports', label: 'Reports', icon: 'assessment' },
+  { to: '/incomes', label: 'Incomes', icon: 'arrow_downward' },
+  { to: '/expenses', label: 'Expenses', icon: 'arrow_upward' },
+  { to: '/budgets', label: 'Budgets', icon: 'pie_chart' },
+  { to: '/accounts', label: 'Accounts', icon: 'account_balance_wallet' },
+  { to: '/reports', label: 'Reports', icon: 'bar_chart' },
 ]
 
 const linkBase =
